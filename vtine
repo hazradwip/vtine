@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine</title>
+
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #f7c6d0, #fbe4ea);
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.65);
+      padding: 40px 60px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      z-index: 2;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      position: relative;
+      width: 300px;
+      height: 120px;
+      margin: auto;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 18px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #yes {
+      background: linear-gradient(135deg, #ff5f7e, #ff2e63);
+      color: white;
+      box-shadow: 0 6px 15px rgba(255, 46, 99, 0.4);
+    }
+
+    /* 🔥 NO button: fixed size + unclickable */
+    #no {
+      position: absolute;
+      right: 0;
+      background: transparent;
+      border: 2px solid #999;
+      color: #555;
+
+      width: 90px;
+      height: 44px;
+
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .heart {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      animation: fall linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: confettiFall linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Misty,<br>will you be my Valentine? 💖</h1>
+
+  <div class="buttons">
+    <button id="yes" onclick="yesClicked()">YES</button>
+    <button id="no">NO</button>
+  </div>
+</div>
+
+<script>
+  const noBtn = document.getElementById("no");
+  const container = document.querySelector(".buttons");
+
+  /* 🏃‍♂️ Make NO run away when mouse gets close */
+  container.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+
+    const distance = Math.hypot(
+      e.clientX - (rect.left + rect.width / 2),
+      e.clientY - (rect.top + rect.height / 2)
+    );
+
+    if (distance < 80) {
+      const maxX = container.clientWidth - noBtn.offsetWidth;
+      const maxY = container.clientHeight - noBtn.offsetHeight;
+
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top  = Math.random() * maxY + "px";
+    }
+  });
+
+  function yesClicked() {
+    document.body.innerHTML = `
+      <div class="card">
+        <h1>💖 YAY!!! 💖</h1>
+        <p style="font-size:20px;">Best decision ever 😘</p>
+        <img src="https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif"
+             style="width:280px;border-radius:10px;margin:20px 0;">
+        <p style="font-size:22px;">I love you ❤️</p>
+      </div>
+    `;
+    startHearts();
+    startConfetti();
+  }
+
+  function startHearts() {
+    setInterval(() => {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.innerHTML = "❤️";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = (3 + Math.random() * 3) + "s";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 6000);
+    }, 300);
+  }
+
+  function startConfetti() {
+    setInterval(() => {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.backgroundColor =
+        ["#ff2e63", "#ffc75f", "#845ec2", "#00c9a7"][Math.floor(Math.random() * 4)];
+      c.style.animationDuration = (3 + Math.random() * 2) + "s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 5000);
+    }, 200);
+  }
+</script>
+
+</body>
+</html>
